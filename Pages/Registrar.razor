@@ -1,0 +1,81 @@
+﻿@page "/registrar"
+@using Data;
+@using Newtonsoft;
+@using Newtonsoft.Json;
+@using System;
+@using System.Net;
+@using Models;
+<h3>Registrar</h3>
+
+<h3> Registrar robo</h3>
+<br />
+
+<div>
+    <form class="form">
+
+        <div class="form-group">
+            <label>Cedula</label>
+            <input class="form-control" @bind="Cedula_Querellante" placeholder="Digite la cedula" />
+        </div>
+        <div class="form-group">
+            <label>Cedula</label>
+            <input class="form-control" @bind="Nombre_Querellante" placeholder="Nombre" />
+        </div>        <div class="form-group">
+            <label>Cedula</label>
+            <input class="form-control" @bind="Fecha" placeholder="21/02/2021" />
+        </div>        <div class="form-group">
+            <label>Cedula</label>
+            <input class="form-control" @bind="Objeto_Robado" placeholder="Objeto robado" />
+        </div>        <div class="form-group">
+            <label>Cedula</label>
+            <input class="form-control" @bind="Lugar" placeholder="Lugar" />
+        </div>        <div class="form-group">
+            <label>Cedula</label>
+            <input class="form-control" @bind="Valor_Objeto" placeholder="Valor del objeto" />
+        </div>        <div class="form-group">
+            <label>Cedula</label>
+            <input class="form-control" @bind="Latitud" placeholder="Latitud" />
+        </div>        <div class="form-group">
+            <label>Cedula</label>
+            <input class="form-control" @bind="Longitud" placeholder="Longitud" />
+        </div>
+
+        <button @onclick="agregar" class="btn btn-outline-success">Guardar</button>
+    </form>
+
+</div>
+
+@code {
+    string Cedula_Querellante;
+    string Fecha;
+    string Objeto_Robado;
+    string Valor_Objeto;
+    string Lugar;
+    string Latitud;
+    string Longitud;
+
+    string link = "https://api.adamix.net/apec/cedula/";
+    string apis;
+    string json;
+    string nombre;
+    robosContext db;
+    Caso caso;
+
+    void ()
+{
+     db = new robosContext();
+    caso = new Caso();
+
+    caso.Nombre_Querellante = nombre;
+    caso.Fecha = fecha;
+    caso.Latitud = Latitud;
+    caso.Longitud = Longitud;
+    caso.Lugar = Lugar;
+    caso.Objeto_Robado = objeto;
+    caso.Cedula_Querellante = Cedula;
+    caso.Valor_Objeto = precio;
+    db.Add(caso);
+    db.SaveChanges();
+}
+
+}

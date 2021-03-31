@@ -1,0 +1,101 @@
+﻿@page "/exportar"
+@using Models;
+@using System.IO;
+
+<h3>Exportar</h3>
+
+<button @onclick="BuscarRobos" class="btn btn-outline-success">Buscar Robos</button>
+<label>Exportar</label>
+<input type="number" @bind-value="Id" placeholder="Digite la cedula para exportar" />
+<button @onclick="ahora" class="btn btn-outline-success">Exportar</button>
+<table class="table table-striped">
+    <thead>
+    <th>ID</th>
+    <th>Name</th>
+    <th>Fecha</th>
+    <th>Lugar</th>
+    <th>Valor</th>
+    <th>Objeto</th>
+    </thead>
+
+
+    <tbody>
+        @foreach (Dictionary<string, string> row in Datos)
+        {
+            <tr>
+                <td>@row["Id"]</td>
+                <td>@row["Nombre_Querellante"]</td>
+                <td>@row["Fecha"]</td>
+                <td>@row["Lugar"]</td>
+                <td>@row["Precio"]</td>
+                <td>@row["Objeto"]</td>
+
+
+
+
+            </tr>
+
+        }
+    </tbody>
+</table>
+@code {
+    int id;
+    robosContext db;
+    List<Dictionary<string, string>> Datos;
+    string ruta = "C:\\Users\\Owner\\Documents\\test.txt";
+
+    void BuscarRobos()
+    {
+        db = new robosContext();
+        var query = from r in db.Caso
+                    select new
+                    {
+                        Id = r.Id,
+                        Nombre_Querellante = r.Nombre,
+                        Objeto = r.Robo,
+                        Lugar = r.Sitio,
+                        Fecha = r.Fecha,
+                        Precio = r.Valor
+
+                    };
+        foreach (var i in query)
+        {
+            var dic = new Dictionary<string, string>();
+            dic.Add("id", i.id.ToString());
+            dic.Add("nombre", i.nombre.ToString());
+            dic.Add("fecha", i.fecha.ToString());
+            dic.Add("lugar", i.lugar.ToString());
+            dic.Add("objeto", i.objeto.ToString());
+            dic.Add("precio", i.precio.ToString());
+            Datos.Add(dic);
+
+        }
+    }
+
+    void ahora()
+    {
+        if (Directory.Exists(ruta) == false)
+        {
+            Directory.CreateDirectory(ruta);
+        }
+        db = new robosContext();
+        var result = db.Caso.SingleOrDefault(b => b.Id == id);
+        String contenido = "<html>" +
+        "<head>" +
+        " <title> Robos</title>" +
+    "</head>" +
+    "<body>" +
+     "<h3>Nombre " + result.Cedula_Querellante + "</h3>" +
+     "<h3>Feche " + result.Fecha + "</h3>" +
+     "< h3 > Latitud " + result.Latitud + " </ h3 > " +
+     "< h3 > Longitud " + result.Longitud + " </ h3 > " +
+     "<h3>Lugar " + result.Lugar_Robo + "</h3>" +
+     "< h3 > Obejot robado " + result.Robo + " </ h3 > " +
+     "<h3>Valor " + result.Valor_Objeto + "</h3>" +
+    "</body>" + "</html>";
+
+        File.WriteAllText(ruta + result.Nombre + ".html", contenido);
+        Console.ReadKey();
+    }
+
+}

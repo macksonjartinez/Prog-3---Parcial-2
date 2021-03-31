@@ -1,0 +1,87 @@
+﻿@page "/editar"
+@using Models;
+@using System;
+@using Data;
+
+<h3>Editar</h3>
+<br />
+<div class="container">
+    <form class="form">
+
+        <div class="form-group">
+            <label>Cedula</label>
+            <input class="form-control" @bind-value="Cedula_Querellante" placeholder="Digite la cedula" />
+        </div>
+
+        <button @onclick="buscarDatos" class="btn btn-outline-info">Guardar</button>
+
+        @if (editado)
+        {
+            <p class="alert-primary">Robo editado correctamente</p>
+
+        }
+        @if (nombre != "")
+        {
+            <label>Cedula</label>
+            <input class="text" @bind="Cedula_Querellante" placeholder="Digite la cedula" />
+            <label>Latitud</label>
+            <input class="text" @bind-value="Latitud" placeholder="Digite la latitud" />
+            <label>Longitud</label>
+            <input class="text" @bind-value="Longitud" placeholder="Digite la longitud" />
+            <label>fecha</label>
+            <input class="text" @bind-value="Fecha" placeholder="Digite la fecha ej:20/12/2020" />
+            <label>Precio</label>
+            <input class="text" @bind="Valor_Objeto" placeholder="Digite el precio del producto" />
+            <label>lugar</label>
+            <input class="text" @bind="Lugar_Robo" placeholder="Digite el lugar" />
+            <label>Nombrer</label>
+            <input class="text" @bind="Nombre_Querellante" placeholder="Digite el nombre" />
+        }
+
+
+    </form>
+</div>
+
+@code {
+    string Cedula_Querellante;
+    string Fecha;
+    string Objeto_Robado;
+    string Precio;
+    string Lugar;
+    string Latitud;
+    string Longitud;
+    string Nombre_Querellante;
+    Boolean editado = false;
+    robosContext db;
+    Caso result;
+
+    void buscarDatos()
+    {
+        db = new robosContext();
+        result = db.Caso.SingleOrDefault(base => b.Cedula_Querellante == Cedula_Querellante);
+
+        Objeto_Robado = result.Robo;
+        Precio = result.Valor;
+        Lugar = result.Sitio;
+        Latitud = result.Latitud;
+        Longitud = result.Longitud;
+        Nombre_Querellante = result.Nombre;
+        Cedula_Querellante = result.Cedula;
+
+    }
+
+    void editar()
+    {
+        db = new robosContext();
+        result.Nombre_Querellante = Nombre_Querellante
+        result.Fecha = Fecha;
+        result.Cedula = Cedula_Querellante;
+        result.Longitud = Longitud;
+        result.Latitud = Latitud;
+        result.Valor = Precio;
+        result.Sitio = Lugar;
+        result.Robo = Objeto_Robado;
+        db.SaveChanges();
+        editado = true;
+    }
+}
